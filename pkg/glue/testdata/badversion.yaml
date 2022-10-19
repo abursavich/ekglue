@@ -1,10 +1,10 @@
 apiVersion: super-pre-alpha-omg
 cluster_config:
-    base:
-        connect_timeout: 2s
-    overrides:
-        - match:
-              - cluster_name: foo:bar:h2
-              - cluster_name: foo:baz:h2
-          override:
-              http2_protocol_options: {}
+  base:
+    connect_timeout: 2s
+  overrides:
+    - match:
+        - cluster_name: foo:bar:h2
+        - cluster_name: foo:baz:h2
+      override:
+        http2_protocol_options: {}

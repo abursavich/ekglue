@@ -1,9 +1,9 @@
 namespace: discovery
 commonLabels:
-    app: ekglue
+  app: ekglue
 resources:
-    - namespace.yaml
-    - deployment.yaml
-    - service.yaml
-    - clusterrole.yaml
-    - clusterrolebinding.yaml
+  - namespace.yaml
+  - deployment.yaml
+  - service.yaml
+  - clusterrole.yaml
+  - clusterrolebinding.yaml

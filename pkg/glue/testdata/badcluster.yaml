@@ -1,4 +1,4 @@
 apiVersion: v1alpha
 cluster_config:
-    base:
-        not_a_valid_field: "oh noes!"
+  base:
+    not_a_valid_field: "oh noes!"
