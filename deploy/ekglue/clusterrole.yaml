@@ -1,7 +1,9 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: ekglue-reader
+  name: discovery-ekglue
+  labels:
+    app.kubernetes.io/name: ekglue
 rules:
   - apiGroups: [""]
     resources: ["services"]

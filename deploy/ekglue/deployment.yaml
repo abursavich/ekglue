@@ -2,24 +2,28 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ekglue
-  annotations:
-    "sidecar.jaegertracing.io/inject": "jaeger"
+  namespace: discovery
+  labels:
+    app.kubernetes.io/name: ekglue
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ekglue
   template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ekglue
     spec:
+      serviceAccountName: ekglue
       containers:
         - name: ekglue
-          image: ekglue
+          image: gcr.io/high-codex-314318/ekglue:0.2.0
           env:
-            - name: JAEGER_SERVICE_NAME
-              value: ekglue
-            - name: JAEGER_SAMPLER_TYPE
-              value: const
-            - name: JAEGER_SAMPLER_PARAM
-              value: "1"
             - name: DEBUG_ADDRESS
-              value: "0.0.0.0:8081"
+              value: ":8081"
+            - name: EKGLUE_CONFIG_FILE
+              value: /etc/ekglue/config.yaml
             - name: MY_POD_NAME
               valueFrom:
                 fieldRef:
@@ -53,3 +57,15 @@ spec:
               memory: 128Mi
             limits:
               memory: 128Mi
+          volumeMounts:
+            - name: config
+              mountPath: /etc/ekglue
+      volumes:
+        - name: config
+          configMap:
+            name: ekglue-config
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534

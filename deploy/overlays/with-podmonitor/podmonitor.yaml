@@ -2,6 +2,9 @@ apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
   name: ekglue
+  namespace: discovery
+  labels:
+    app: ekglue
 spec:
   selector:
     matchLabels:
@@ -9,3 +12,4 @@ spec:
   podMetricsEndpoints:
     - port: debug
       path: /metrics
+    # http://localhost:9901/stats/prometheus?filter=(httpbin|ekglue)&usedonly

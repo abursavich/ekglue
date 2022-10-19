@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: upstream
+  namespace: httpbin
+  annotations:
+    cert-manager.io/cluster-issuer: zerossl-cluster-issuer-dev-alcfd-com
+  labels:
+    app.kubernetes.io/name: httpbin
+    app.kubernetes.io/component: upstream
+    app.kubernetes.io/part-of: httpbin
+spec:
+  ingressClassName: ingress-controller-internal
+  rules:
+    - host: xds-demo-upstream.dev-alcfd.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: upstream
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - xds-demo-upstream.dev-alcfd.com
+      secretName: upstream-tls

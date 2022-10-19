@@ -7,7 +7,7 @@ COPY go.mod go.sum /ekglue/
 RUN go mod download
 
 COPY . /ekglue/
-RUN CGO_ENABLED=0 go install ./cmd/ekglue
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go install ./cmd/ekglue
 
 FROM gcr.io/distroless/static-debian11
 WORKDIR /

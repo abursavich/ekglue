@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ekglue-config
+  namespace: discovery
+  labels:
+    app.kubernetes.io/name: ekglue
+data:
+  config.yaml: |
+    apiVersion: v1alpha
+    cluster_config:
+      base:
+        type: EDS
+        lb_policy: LEAST_REQUEST
+        lb_subset_config:
+          locality_weight_aware: true
+        common_lb_config:
+          locality_weighted_lb_config: {}
+        connect_timeout: 1s
+        upstream_connection_options:
+          tcp_keepalive: {}
+        eds_cluster_config:
+          eds_config:
+            resource_api_version: V3
+            api_config_source:
+              api_type: GRPC
+              transport_api_version: V3
+              grpc_services:
+                - envoy_grpc:
+                    cluster_name: ekglue
+      overrides:
+        - match:
+            - port_name: grpc
+            - port_name: http2
+          override:
+            typed_extension_protocol_options:
+              envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+                "@type": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+                explicit_http_config:
+                  http2_protocol_options: {}
+    endpoint_config:
+      locality:
+        region_from:
+          label: topology.kubernetes.io/region
+        zone_from:
+          label: topology.kubernetes.io/zone

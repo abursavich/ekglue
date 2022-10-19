@@ -46,8 +46,8 @@ static_resources:
                   - name: envoy.router
   clusters:
     - name: self
-      connect_timeout: 1s
       type: STATIC
+      connect_timeout: 1s
       load_assignment:
         cluster_name: self
         endpoints:
@@ -71,21 +71,21 @@ static_resources:
               region: earth
               zone: afardomain
               sub_zone: afarhost
-    - name: cds
+    - name: ekglue
       connect_timeout: 1s
-      type: STATIC
+      type: STRICT_DNS
       lb_policy: RANDOM
       http2_protocol_options: {}
       upstream_connection_options:
         tcp_keepalive: {}
       load_assignment:
-        cluster_name: cds
+        cluster_name: ekglue
         endpoints:
           - lb_endpoints:
               - endpoint:
                   address:
                     socket_address:
-                      address: 127.0.0.1
+                      address: ekglue.discovery.svc.cluster.local.
                       port_value: 9000
     - name: foo
       connect_timeout: 1s
@@ -102,7 +102,7 @@ static_resources:
             transport_api_version: V2
             grpc_services:
               envoy_grpc:
-                cluster_name: cds
+                cluster_name: ekglue
 dynamic_resources:
   cds_config:
     resource_api_version: V2
@@ -111,4 +111,4 @@ dynamic_resources:
       transport_api_version: V2
       grpc_services:
         envoy_grpc:
-          cluster_name: cds
+          cluster_name: ekglue
